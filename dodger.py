@@ -134,7 +134,7 @@ gameOverSound = pygame.mixer.Sound('gameover.wav')
 pygame.mixer.music.load('background.mid')
 
 # Set up images.                                                          
-baddieImage = pygame.image.load('baddie.png')                             
+baddieImage = pygame.image.load('monkey.png')                             
 baddieImage = pygame.transform.scale(baddieImage, (BADDIEWIDTH, BADDIEHEIGHT))
 missileImage = pygame.image.load('missile_gauche.png')                             
 missileImage = pygame.transform.scale(missileImage, (MISSILEWIDTH, MISSILEHEIGHT))
