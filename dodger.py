@@ -17,16 +17,39 @@ class Player:
         self.image = pygame.image.load('player.png')
         self.rect = self.image.get_rect()
         self.rect.topleft = (0, WINDOWHEIGHT / 2)
-    def keyboardMove(self, moveLeft, moveRight, moveUp, moveDown):
-        if moveLeft and self.rect.left > 0:
+        self.moveDown = self.moveUp = self.moveLeft = self.moveRight = False
+    def keyboardMove(self):
+        if self.moveLeft and self.rect.left > 0:
             self.rect.move_ip(-1 * PLAYERMOVERATE, 0)
-        if moveRight and self.rect.right < WINDOWWIDTH:
+        if self.moveRight and self.rect.right < WINDOWWIDTH:
             self.rect.move_ip(PLAYERMOVERATE, 0)
-        if moveUp and self.rect.top > 0:
+        if self.moveUp and self.rect.top > 0:
             self.rect.move_ip(0, -1 * PLAYERMOVERATE)
-        if moveDown and self.rect.bottom < WINDOWHEIGHT:
+        if self.moveDown and self.rect.bottom < WINDOWHEIGHT:
             self.rect.move_ip(0, PLAYERMOVERATE)
-    
+    def KEYDOWN(self, event):
+        if event.key == K_LEFT or event.key == K_a:
+            self.moveRight = False
+            self.moveLeft = True
+        if event.key == K_RIGHT or event.key == K_d:
+            self.moveLeft = False
+            self.moveRight = True
+        if event.key == K_UP or event.key == K_w:
+            self.moveDown = False
+            self.moveUp = True
+        if event.key == K_DOWN or event.key == K_s:
+            self.moveUp = False
+            self.moveDown = True
+    def KEYUP(self, event):
+        if event.key == K_LEFT or event.key == K_a:
+            self.moveLeft = False
+        if event.key == K_RIGHT or event.key == K_d:
+            self.moveRight = False
+        if event.key == K_UP or event.key == K_w:
+            self.moveUp = False
+        if event.key == K_DOWN or event.key == K_s:
+            self.moveDown = False
+
 def terminate():
     pygame.quit() #ferme pygame
     sys.exit()    #ferme le programme python
@@ -83,7 +106,6 @@ while True:
     baddies = []
     score = 0
     player = Player()
-    moveLeft = moveRight = moveUp = moveDown = False
     baddieAddCounter = 0
     pygame.mixer.music.play(-1, 0.0)  #faire tourner la musique en boucle
 
@@ -96,29 +118,25 @@ while True:
 
             if event.type == KEYDOWN:  #touches qui font bouger le joueur si activées
                 if event.key == K_LEFT or event.key == K_a:
-                    moveRight = False
-                    moveLeft = True
+                    player.KEYDOWN(event)
                 if event.key == K_RIGHT or event.key == K_d:
-                    moveLeft = False
-                    moveRight = True
+                    player.KEYDOWN(event)
                 if event.key == K_UP or event.key == K_w:
-                    moveDown = False
-                    moveUp = True
+                    player.KEYDOWN(event)
                 if event.key == K_DOWN or event.key == K_s:
-                    moveUp = False
-                    moveDown = True
+                    player.KEYDOWN(event)
 
             if event.type == KEYUP: #dès qiue la touche est relachée, le joueur ne bouge plus
                 if event.key == K_ESCAPE:
                         terminate()
                 if event.key == K_LEFT or event.key == K_a:
-                    moveLeft = False
+                    player.KEYUP(event)
                 if event.key == K_RIGHT or event.key == K_d:
-                    moveRight = False
+                    player.KEYUP(event)
                 if event.key == K_UP or event.key == K_w:
-                    moveUp = False
+                    player.KEYUP(event)
                 if event.key == K_DOWN or event.key == K_s:
-                    moveDown = False
+                    player.KEYUP(event)
 
             if event.type == MOUSEMOTION: # If the mouse moves, move the player where to the cursor.
                 player.rect.centerx = event.pos[0]
@@ -136,8 +154,8 @@ while True:
             baddies.append(newBaddie)
 
         # Move the player around. et faire en sorte que le joueur ne sorte pas de l'écran
-        player.keyboardMove(moveLeft, moveRight, moveUp, moveDown)
-        
+        player.keyboardMove()
+
         # Move the baddies down.
         for b in baddies:      #vitesse des ennemis
             b['rect'].move_ip(-b['speed'], 0) #vitesse des ennemis
