@@ -6,6 +6,8 @@ WINDOWHEIGHT = 600
 TEXTCOLOR = (0, 0, 0)
 BACKGROUNDCOLOR = (255, 255, 255)
 FPS = 60
+PLAYERWIDTH = 40
+PLAYERHEIGHT = 40
 BADDIEWIDTH = 40
 BADDIEHEIGHT = 40
 BADDIEMINSPEED = 3
@@ -19,6 +21,7 @@ MISSILERATE = 250
 class Player:
     def __init__(self):
         self.image = pygame.image.load('heros_plage.png')
+        self.image = pygame.transform.scale(self.image, (PLAYERWIDTH, PLAYERHEIGHT))
         self.rect = self.image.get_rect()
         self.rect.topleft = (0, WINDOWHEIGHT / 2)
         self.moveDown = self.moveUp = self.moveLeft = self.moveRight = False
