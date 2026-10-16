@@ -10,9 +10,10 @@ BADDIESIZE = 40
 BADDIEMINSPEED = 3
 BADDIEMAXSPEED = 6
 ADDNEWBADDIERATE = 30
-MISSILESIZE = 20
+MISSILEWIDTH = 20                 
+MISSILEHEIGHT = 8
 MISSILESPEED = 7
-MISSILETIMER = 100
+MISSILERATE = 100
 
 class Player:
     def __init__(self):
@@ -55,9 +56,9 @@ class Player:
     def mouseMove(self, event):
         self.rect.centerx = event.pos[0]
         self.rect.centery = event.pos[1]
-    def playerhitbaddie(self, baddies):
-        for b in baddies:
-            if self.rect.colliderect(b.rect):
+    def isHit(self, objects):                          
+        for o in objects:                              
+            if self.rect.colliderect(o.rect):          
                 return True
         return False
     def draw(self, surface):
@@ -69,14 +70,21 @@ class Baddie:
         self.rect = self.image.get_rect()
         self.rect.topleft = (WINDOWWIDTH, random.randint(0, WINDOWHEIGHT - BADDIESIZE))
         self.speed = random.randint(BADDIEMINSPEED, BADDIEMAXSPEED)
+        self.shootCounter = random.randint(0, MISSILERATE - 1)
     def move(self):
         self.rect.move_ip(-self.speed, 0)
+    def tryToShoot(self, missileImage):                        
+        self.shootCounter += 1
+        if self.shootCounter >= MISSILERATE:
+            self.shootCounter = 0
+            return Missile(missileImage, self.rect.left, self.rect.centery)
+        return None
     def isOffScreen(self):
         return self.rect.right < 0
     def draw(self, surface):
         surface.blit(self.image, self.rect)
 
-class missile:
+class Missile:
     def __init__(self,image, x, y):
         self.image = image
         self.rect = self.image.get_rect()
@@ -128,7 +136,7 @@ pygame.mixer.music.load('background.mid')
 baddieImage = pygame.image.load('baddie.png')                             
 baddieImage = pygame.transform.scale(baddieImage, (BADDIESIZE, BADDIESIZE))
 missileImage = pygame.image.load('missile_gauche.png')                             
-missileImage = pygame.transform.scale(missileImage, (MISSILESIZE, MISSILESIZE))
+missileImage = pygame.transform.scale(missileImage, (MISSILEWIDTH, MISSILEHEIGHT))
 
 # Show the "Start" screen.
 windowSurface.fill(BACKGROUNDCOLOR)
@@ -190,6 +198,9 @@ while True:
         # Move the baddies down.
         for b in baddies:      #vitesse des ennemis
             b.move() #vitesse des ennemis
+            missile = b.tryToShoot(missileImage)    
+            if missile is not None:                
+                missiles.append(missile)
 
         # Move the missiles down.
         for m in missiles:      #vitesse des missiles
@@ -226,7 +237,7 @@ while True:
         pygame.display.update()
 
         # Check if any of the baddies have hit the player.
-        if player.playerhitbaddie(baddies):
+        if player.isHit(baddies) or player.isHit(missiles):
             if score > topScore:
                 topScore = score # set new top score
             break
