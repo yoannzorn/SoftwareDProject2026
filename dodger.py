@@ -57,6 +57,8 @@ class Player:
             if self.rect.colliderect(b['rect']):
                 return True
         return False
+    def draw(self, surface):
+        surface.blit(self.image, self.rect)
 
 def terminate():
     pygame.quit() #ferme pygame
@@ -174,7 +176,7 @@ while True:
         drawText('Top Score: %s' % (int(topScore)), font, windowSurface, 10, 40)
 
         # Draw the player's rectangle.
-        windowSurface.blit(player.image, player.rect)
+        player.draw(windowSurface)
 
         # Draw each baddie.
         for b in baddies:
