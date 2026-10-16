@@ -18,7 +18,7 @@ MISSILERATE = 250
 
 class Player:
     def __init__(self):
-        self.image = pygame.image.load('player.png')
+        self.image = pygame.image.load('heros_plage.png')
         self.rect = self.image.get_rect()
         self.rect.topleft = (0, WINDOWHEIGHT / 2)
         self.moveDown = self.moveUp = self.moveLeft = self.moveRight = False
