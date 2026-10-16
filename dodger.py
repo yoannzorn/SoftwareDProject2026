@@ -191,10 +191,19 @@ while True:
         for b in baddies:      #vitesse des ennemis
             b.move() #vitesse des ennemis
 
+        # Move the missiles down.
+        for m in missiles:      #vitesse des missiles
+            m.move() #vitesse des missiles
+
         # Delete baddies that have fallen past the bottom.
         for b in baddies[:]:
             if b.isOffScreen():
                 baddies.remove(b)
+
+        # Delete missiles that have fallen past the bottom.
+        for m in missiles[:]:
+            if m.isOffScreen():
+                missiles.remove(m)
 
         # Draw the game world on the window.
         windowSurface.fill(BACKGROUNDCOLOR)
@@ -209,6 +218,10 @@ while True:
         # Draw each baddie.
         for b in baddies:
             b.draw(windowSurface)
+
+        # Draw each missile.
+        for m in missiles:
+            m.draw(windowSurface)
 
         pygame.display.update()
 
