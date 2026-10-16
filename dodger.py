@@ -1,7 +1,7 @@
 import pygame, random, sys
 from pygame.locals import *
 
-WINDOWWIDTH = 600
+WINDOWWIDTH = 800
 WINDOWHEIGHT = 600
 TEXTCOLOR = (0, 0, 0)
 BACKGROUNDCOLOR = (255, 255, 255)
@@ -14,24 +14,24 @@ ADDNEWBADDIERATE = 6
 PLAYERMOVERATE = 5
 
 def terminate():
-    pygame.quit()
-    sys.exit()
+    pygame.quit() #ferme pygame
+    sys.exit()    #ferme le programme python
 
 def waitForPlayerToPressKey():
     while True:
         for event in pygame.event.get():
-            if event.type == QUIT:
+            if event.type == QUIT:       #quitter le jeu avec la croix
                 terminate()
             if event.type == KEYDOWN:
-                if event.key == K_ESCAPE: # Pressing ESC quits.
+                if event.key == K_ESCAPE: # quitter le jeu avec la touche echap
                     terminate()
                 return
 
-def playerHasHitBaddie(playerRect, baddies):
+def playerHasHitBaddie(playerRect, baddies): #la hitbox du joueur et des ennemis
     for b in baddies:
-        if playerRect.colliderect(b['rect']):
-            return True
-    return False
+        if playerRect.colliderect(b['rect']): #si le joueur touche un ennemi, return True
+            return True                       #collision    
+    return False                              #pas collision   
 
 def drawText(text, font, surface, x, y):
     textobj = font.render(text, 1, TEXTCOLOR)
@@ -42,21 +42,21 @@ def drawText(text, font, surface, x, y):
 # Set up pygame, the window, and the mouse cursor.
 pygame.init()
 mainClock = pygame.time.Clock()
-windowSurface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
-pygame.display.set_caption('Dodger')
+windowSurface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT)) #taille de la fenêtre du jeu
+pygame.display.set_caption('Dodger')  #titre du jeu
 pygame.mouse.set_visible(False)
 
 # Set up the fonts.
-font = pygame.font.SysFont(None, 48)
+font = pygame.font.SysFont(None, 48)  #police d'écriture et taille de la police
 
 # Set up sounds.
 gameOverSound = pygame.mixer.Sound('gameover.wav')
 pygame.mixer.music.load('background.mid')
 
 # Set up images.
-playerImage = pygame.image.load('player.png')
+playerImage = pygame.image.load('player.png') #skin du joueur
 playerRect = playerImage.get_rect()
-baddieImage = pygame.image.load('baddie.png')
+baddieImage = pygame.image.load('baddie.png') #skin des ennemis
 
 # Show the "Start" screen.
 windowSurface.fill(BACKGROUNDCOLOR)
@@ -70,11 +70,11 @@ while True:
     # Set up the start of the game.
     baddies = []
     score = 0
-    playerRect.topleft = (WINDOWWIDTH / 2, WINDOWHEIGHT - 50)
+    playerRect.topleft = (WINDOWWIDTH / 2, WINDOWHEIGHT - 50) #position du joueur au début du jeu
     moveLeft = moveRight = moveUp = moveDown = False
     reverseCheat = slowCheat = False
     baddieAddCounter = 0
-    pygame.mixer.music.play(-1, 0.0)
+    pygame.mixer.music.play(-1, 0.0)  #faire tourner la musique en boucle
 
     while True: # The game loop runs while the game part is playing.
         score += 1 # Increase score.
@@ -83,7 +83,7 @@ while True:
             if event.type == QUIT:
                 terminate()
 
-            if event.type == KEYDOWN:
+            if event.type == KEYDOWN:  #touches qui font bouger le joueur si activées
                 if event.key == K_z:
                     reverseCheat = True
                 if event.key == K_x:
@@ -101,7 +101,7 @@ while True:
                     moveUp = False
                     moveDown = True
 
-            if event.type == KEYUP:
+            if event.type == KEYUP: #dès qiue la touche est relachée, le joueur ne bouge plus
                 if event.key == K_z:
                     reverseCheat = False
                     score = 0
@@ -110,7 +110,6 @@ while True:
                     score = 0
                 if event.key == K_ESCAPE:
                         terminate()
-
                 if event.key == K_LEFT or event.key == K_a:
                     moveLeft = False
                 if event.key == K_RIGHT or event.key == K_d:
@@ -120,8 +119,7 @@ while True:
                 if event.key == K_DOWN or event.key == K_s:
                     moveDown = False
 
-            if event.type == MOUSEMOTION:
-                # If the mouse moves, move the player where to the cursor.
+            if event.type == MOUSEMOTION: # If the mouse moves, move the player where to the cursor.
                 playerRect.centerx = event.pos[0]
                 playerRect.centery = event.pos[1]
         # Add new baddies at the top of the screen, if needed.
@@ -137,7 +135,7 @@ while True:
 
             baddies.append(newBaddie)
 
-        # Move the player around.
+        # Move the player around. et faire en sorte que le joueur ne sorte pas de l'écran
         if moveLeft and playerRect.left > 0:
             playerRect.move_ip(-1 * PLAYERMOVERATE, 0)
         if moveRight and playerRect.right < WINDOWWIDTH:
@@ -149,7 +147,7 @@ while True:
 
         # Move the baddies down.
         for b in baddies:
-            if not reverseCheat and not slowCheat:
+            if not reverseCheat and not slowCheat: #vitesse des ennemis
                 b['rect'].move_ip(0, b['speed'])
             elif reverseCheat:
                 b['rect'].move_ip(0, -5)
