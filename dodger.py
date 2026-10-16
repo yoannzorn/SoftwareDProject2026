@@ -6,7 +6,8 @@ WINDOWHEIGHT = 600
 TEXTCOLOR = (0, 0, 0)
 BACKGROUNDCOLOR = (255, 255, 255)
 FPS = 60
-BADDIESIZE = 40
+BADDIEWIDTH = 40
+BADDIEHEIGHT = 40
 BADDIEMINSPEED = 3
 BADDIEMAXSPEED = 6
 ADDNEWBADDIERATE = 30
@@ -68,7 +69,7 @@ class Baddie:
     def __init__(self,image):
         self.image = image
         self.rect = self.image.get_rect()
-        self.rect.topleft = (WINDOWWIDTH, random.randint(0, WINDOWHEIGHT - BADDIESIZE))
+        self.rect.topleft = (WINDOWWIDTH, random.randint(0, WINDOWHEIGHT - BADDIEHEIGHT))
         self.speed = random.randint(BADDIEMINSPEED, BADDIEMAXSPEED)
         self.shootCounter = random.randint(0, MISSILERATE - 1)
     def move(self):
@@ -134,7 +135,7 @@ pygame.mixer.music.load('background.mid')
 
 # Set up images.                                                          
 baddieImage = pygame.image.load('baddie.png')                             
-baddieImage = pygame.transform.scale(baddieImage, (BADDIESIZE, BADDIESIZE))
+baddieImage = pygame.transform.scale(baddieImage, (BADDIEWIDTH, BADDIEHEIGHT))
 missileImage = pygame.image.load('missile_gauche.png')                             
 missileImage = pygame.transform.scale(missileImage, (MISSILEWIDTH, MISSILEHEIGHT))
 
