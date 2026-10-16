@@ -1,7 +1,6 @@
 import pygame, random, sys
 from pygame.locals import *
-#test avec git1
-#test avec git2
+
 WINDOWWIDTH = 600
 WINDOWHEIGHT = 600
 TEXTCOLOR = (0, 0, 0)
