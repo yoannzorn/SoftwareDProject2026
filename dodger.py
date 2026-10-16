@@ -130,7 +130,7 @@ pygame.mouse.set_visible(False)
 font = pygame.font.SysFont(None, 48)  #police d'écriture et taille de la police
 
 # Set up sounds.
-gameOverSound = pygame.mixer.Sound('gameover.wav')
+gameOverSound = pygame.mixer.Sound('son_perdu.wav') 
 pygame.mixer.music.load('musique_plage.mid')
 
 # Set up images.                                                          
