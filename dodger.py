@@ -17,6 +17,15 @@ class Player:
         self.image = pygame.image.load('player.png')
         self.rect = self.image.get_rect()
         self.rect.topleft = (0, WINDOWHEIGHT / 2)
+    def keyboardMove(self, moveLeft, moveRight, moveUp, moveDown):
+        if moveLeft and self.rect.left > 0:
+            self.rect.move_ip(-1 * PLAYERMOVERATE, 0)
+        if moveRight and self.rect.right < WINDOWWIDTH:
+            self.rect.move_ip(PLAYERMOVERATE, 0)
+        if moveUp and self.rect.top > 0:
+            self.rect.move_ip(0, -1 * PLAYERMOVERATE)
+        if moveDown and self.rect.bottom < WINDOWHEIGHT:
+            self.rect.move_ip(0, PLAYERMOVERATE)
     
 def terminate():
     pygame.quit() #ferme pygame
@@ -127,15 +136,8 @@ while True:
             baddies.append(newBaddie)
 
         # Move the player around. et faire en sorte que le joueur ne sorte pas de l'écran
-        if moveLeft and player.rect.left > 0:
-            player.rect.move_ip(-1 * PLAYERMOVERATE, 0)
-        if moveRight and player.rect.right < WINDOWWIDTH:
-            player.rect.move_ip(PLAYERMOVERATE, 0)
-        if moveUp and player.rect.top > 0:
-            player.rect.move_ip(0, -1 * PLAYERMOVERATE)
-        if moveDown and player.rect.bottom < WINDOWHEIGHT:
-            player.rect.move_ip(0, PLAYERMOVERATE)
-
+        player.keyboardMove(moveLeft, moveRight, moveUp, moveDown)
+        
         # Move the baddies down.
         for b in baddies:      #vitesse des ennemis
             b['rect'].move_ip(-b['speed'], 0) #vitesse des ennemis
