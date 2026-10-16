@@ -54,9 +54,22 @@ class Player:
         self.rect.centery = event.pos[1]
     def playerhitbaddie(self, baddies):
         for b in baddies:
-            if self.rect.colliderect(b['rect']):
+            if self.rect.colliderect(b.rect):
                 return True
         return False
+    def draw(self, surface):
+        surface.blit(self.image, self.rect)
+
+class Baddie:
+    def __init__(self,image):
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (WINDOWWIDTH, random.randint(0, WINDOWHEIGHT - BADDIESIZE))
+        self.speed = random.randint(BADDIEMINSPEED, BADDIEMAXSPEED)
+    def move(self):
+        self.rect.move_ip(-self.speed, 0)
+    def isOffScreen(self):
+        return self.rect.right < 0
     def draw(self, surface):
         surface.blit(self.image, self.rect)
 
@@ -94,8 +107,9 @@ font = pygame.font.SysFont(None, 48)  #police d'écriture et taille de la police
 gameOverSound = pygame.mixer.Sound('gameover.wav')
 pygame.mixer.music.load('background.mid')
 
-# Set up images.
-baddieImage = pygame.image.load('baddie.png') #skin des ennemis
+# Set up images.                                                          
+baddieImage = pygame.image.load('baddie.png')                             
+baddieImage = pygame.transform.scale(baddieImage, (BADDIESIZE, BADDIESIZE))
 
 # Show the "Start" screen.
 windowSurface.fill(BACKGROUNDCOLOR)
@@ -148,24 +162,18 @@ while True:
         baddieAddCounter += 1
         if baddieAddCounter == ADDNEWBADDIERATE:
             baddieAddCounter = 0
-            baddieSize = BADDIESIZE
-            newBaddie = {'rect': pygame.Rect(WINDOWWIDTH + baddieSize, random.randint(0, WINDOWHEIGHT - baddieSize), baddieSize, baddieSize),
-                        'speed': random.randint(BADDIEMINSPEED, BADDIEMAXSPEED),
-                        'surface':pygame.transform.scale(baddieImage, (baddieSize, baddieSize)),
-                        }
-
-            baddies.append(newBaddie)
+            baddies.append(Baddie(baddieImage))
 
         # Move the player around. et faire en sorte que le joueur ne sorte pas de l'écran
         player.keyboardMove()
 
         # Move the baddies down.
         for b in baddies:      #vitesse des ennemis
-            b['rect'].move_ip(-b['speed'], 0) #vitesse des ennemis
+            b.move() #vitesse des ennemis
 
         # Delete baddies that have fallen past the bottom.
         for b in baddies[:]:
-            if b['rect'].right < 0:
+            if b.isOffScreen():
                 baddies.remove(b)
 
         # Draw the game world on the window.
@@ -180,7 +188,7 @@ while True:
 
         # Draw each baddie.
         for b in baddies:
-            windowSurface.blit(b['surface'], b['rect'])
+            b.draw(windowSurface)
 
         pygame.display.update()
 
