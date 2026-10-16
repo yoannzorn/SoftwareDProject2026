@@ -10,7 +10,6 @@ BADDIESIZE = 40
 BADDIEMINSPEED = 3
 BADDIEMAXSPEED = 6
 ADDNEWBADDIERATE = 30
-PLAYERMOVERATE = 5
 
 class Player:
     def __init__(self):
@@ -18,15 +17,16 @@ class Player:
         self.rect = self.image.get_rect()
         self.rect.topleft = (0, WINDOWHEIGHT / 2)
         self.moveDown = self.moveUp = self.moveLeft = self.moveRight = False
+        self.moveRate = 5
     def keyboardMove(self):
         if self.moveLeft and self.rect.left > 0:
-            self.rect.move_ip(-1 * PLAYERMOVERATE, 0)
+            self.rect.move_ip(-1 * self.moveRate, 0)
         if self.moveRight and self.rect.right < WINDOWWIDTH:
-            self.rect.move_ip(PLAYERMOVERATE, 0)
+            self.rect.move_ip(self.moveRate, 0)
         if self.moveUp and self.rect.top > 0:
-            self.rect.move_ip(0, -1 * PLAYERMOVERATE)
+            self.rect.move_ip(0, -1 * self.moveRate)
         if self.moveDown and self.rect.bottom < WINDOWHEIGHT:
-            self.rect.move_ip(0, PLAYERMOVERATE)
+            self.rect.move_ip(0, self.moveRate)
     def KEYDOWN(self, event):
         if event.key == K_LEFT or event.key == K_a:
             self.moveRight = False
