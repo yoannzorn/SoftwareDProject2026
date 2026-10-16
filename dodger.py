@@ -131,7 +131,7 @@ font = pygame.font.SysFont(None, 48)  #police d'écriture et taille de la police
 
 # Set up sounds.
 gameOverSound = pygame.mixer.Sound('gameover.wav')
-pygame.mixer.music.load('background.mid')
+pygame.mixer.music.load('musique_plage.mid')
 
 # Set up images.                                                          
 baddieImage = pygame.image.load('monkey.png')                             
