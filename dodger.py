@@ -13,7 +13,7 @@ BADDIEMAXSPEED = 6
 ADDNEWBADDIERATE = 30
 MISSILEWIDTH = 25                 
 MISSILEHEIGHT = 15
-MISSILESPEED = 8
+MISSILESPEED = 7
 MISSILERATE = 250
 
 class Player:
@@ -136,7 +136,7 @@ pygame.mixer.music.load('background.mid')
 # Set up images.                                                          
 baddieImage = pygame.image.load('monkey.png')                             
 baddieImage = pygame.transform.scale(baddieImage, (BADDIEWIDTH, BADDIEHEIGHT))
-missileImage = pygame.image.load('missile_gauche.png')                             
+missileImage = pygame.image.load('banana_bunch.png')                             
 missileImage = pygame.transform.scale(missileImage, (MISSILEWIDTH, MISSILEHEIGHT))
 
 # Show the "Start" screen.
