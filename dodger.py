@@ -12,6 +12,12 @@ BADDIEMAXSPEED = 6
 ADDNEWBADDIERATE = 30
 PLAYERMOVERATE = 5
 
+class Player:
+    def __init__(self):
+        self.image = pygame.image.load('player.png')
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (0, WINDOWHEIGHT / 2)
+    
 def terminate():
     pygame.quit() #ferme pygame
     sys.exit()    #ferme le programme python
@@ -53,8 +59,6 @@ gameOverSound = pygame.mixer.Sound('gameover.wav')
 pygame.mixer.music.load('background.mid')
 
 # Set up images.
-playerImage = pygame.image.load('player.png') #skin du joueur
-playerRect = playerImage.get_rect()
 baddieImage = pygame.image.load('baddie.png') #skin des ennemis
 
 # Show the "Start" screen.
@@ -69,7 +73,7 @@ while True:
     # Set up the start of the game.
     baddies = []
     score = 0
-    playerRect.topleft = (0, WINDOWHEIGHT / 2) #position du joueur au début du jeu
+    player = Player()
     moveLeft = moveRight = moveUp = moveDown = False
     baddieAddCounter = 0
     pygame.mixer.music.play(-1, 0.0)  #faire tourner la musique en boucle
@@ -108,8 +112,8 @@ while True:
                     moveDown = False
 
             if event.type == MOUSEMOTION: # If the mouse moves, move the player where to the cursor.
-                playerRect.centerx = event.pos[0]
-                playerRect.centery = event.pos[1]
+                player.rect.centerx = event.pos[0]
+                player.rect.centery = event.pos[1]
         # Add new baddies at the top of the screen, if needed.
         baddieAddCounter += 1
         if baddieAddCounter == ADDNEWBADDIERATE:
@@ -123,14 +127,14 @@ while True:
             baddies.append(newBaddie)
 
         # Move the player around. et faire en sorte que le joueur ne sorte pas de l'écran
-        if moveLeft and playerRect.left > 0:
-            playerRect.move_ip(-1 * PLAYERMOVERATE, 0)
-        if moveRight and playerRect.right < WINDOWWIDTH:
-            playerRect.move_ip(PLAYERMOVERATE, 0)
-        if moveUp and playerRect.top > 0:
-            playerRect.move_ip(0, -1 * PLAYERMOVERATE)
-        if moveDown and playerRect.bottom < WINDOWHEIGHT:
-            playerRect.move_ip(0, PLAYERMOVERATE)
+        if moveLeft and player.rect.left > 0:
+            player.rect.move_ip(-1 * PLAYERMOVERATE, 0)
+        if moveRight and player.rect.right < WINDOWWIDTH:
+            player.rect.move_ip(PLAYERMOVERATE, 0)
+        if moveUp and player.rect.top > 0:
+            player.rect.move_ip(0, -1 * PLAYERMOVERATE)
+        if moveDown and player.rect.bottom < WINDOWHEIGHT:
+            player.rect.move_ip(0, PLAYERMOVERATE)
 
         # Move the baddies down.
         for b in baddies:      #vitesse des ennemis
@@ -149,7 +153,7 @@ while True:
         drawText('Top Score: %s' % (int(topScore)), font, windowSurface, 10, 40)
 
         # Draw the player's rectangle.
-        windowSurface.blit(playerImage, playerRect)
+        windowSurface.blit(player.image, player.rect)
 
         # Draw each baddie.
         for b in baddies:
@@ -158,7 +162,7 @@ while True:
         pygame.display.update()
 
         # Check if any of the baddies have hit the player.
-        if playerHasHitBaddie(playerRect, baddies):
+        if playerHasHitBaddie(player.rect, baddies):
             if score > topScore:
                 topScore = score # set new top score
             break
