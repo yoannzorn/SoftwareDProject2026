@@ -76,6 +76,20 @@ class Baddie:
     def draw(self, surface):
         surface.blit(self.image, self.rect)
 
+class missile:
+    def __init__(self,image, x, y):
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.rect.right = x
+        self.rect.centery = y
+        self.speed = MISSILESPEED
+    def move(self):
+        self.rect.move_ip(-self.speed, 0)
+    def isOffScreen(self):
+        return self.rect.right < 0
+    def draw(self, surface):
+        surface.blit(self.image, self.rect)
+
 def terminate():
     pygame.quit() #ferme pygame
     sys.exit()    #ferme le programme python
@@ -113,6 +127,8 @@ pygame.mixer.music.load('background.mid')
 # Set up images.                                                          
 baddieImage = pygame.image.load('baddie.png')                             
 baddieImage = pygame.transform.scale(baddieImage, (BADDIESIZE, BADDIESIZE))
+missileImage = pygame.image.load('missile_gauche.png')                             
+missileImage = pygame.transform.scale(missileImage, (MISSILESIZE, MISSILESIZE))
 
 # Show the "Start" screen.
 windowSurface.fill(BACKGROUNDCOLOR)
@@ -125,6 +141,7 @@ topScore = 0
 while True:
     # Set up the start of the game.
     baddies = []
+    missiles = []
     score = 0
     player = Player()
     baddieAddCounter = 0
