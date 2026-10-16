@@ -116,7 +116,7 @@ while True:
         if baddieAddCounter == ADDNEWBADDIERATE:
             baddieAddCounter = 0
             baddieSize = random.randint(BADDIEMINSIZE, BADDIEMAXSIZE)
-            newBaddie = {'rect': pygame.Rect(random.randint(0, WINDOWWIDTH - baddieSize), 0 - baddieSize, baddieSize, baddieSize),
+            newBaddie = {'rect': pygame.Rect(WINDOWWIDTH + baddieSize, random.randint(0, WINDOWHEIGHT - baddieSize), baddieSize, baddieSize),
                         'speed': random.randint(BADDIEMINSPEED, BADDIEMAXSPEED),
                         'surface':pygame.transform.scale(baddieImage, (baddieSize, baddieSize)),
                         }
@@ -135,11 +135,11 @@ while True:
 
         # Move the baddies down.
         for b in baddies:      #vitesse des ennemis
-            b['rect'].move_ip(0, b['speed'])
+            b['rect'].move_ip(-b['speed'], 0) #vitesse des ennemis
 
         # Delete baddies that have fallen past the bottom.
         for b in baddies[:]:
-            if b['rect'].top > WINDOWHEIGHT:
+            if b['rect'].right < 0:
                 baddies.remove(b)
 
         # Draw the game world on the window.
