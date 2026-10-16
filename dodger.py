@@ -75,7 +75,7 @@ while True:
     pygame.mixer.music.play(-1, 0.0)  #faire tourner la musique en boucle
 
     while True: # The game loop runs while the game part is playing.
-        score += 1 # Increase score.
+        score += (1/60) # Increase score / 1 point par seconde
 
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -144,9 +144,9 @@ while True:
         # Draw the game world on the window.
         windowSurface.fill(BACKGROUNDCOLOR)
 
-        # Draw the score and top score.
-        drawText('Score: %s' % (score), font, windowSurface, 10, 0)
-        drawText('Top Score: %s' % (topScore), font, windowSurface, 10, 40)
+        # Draw the score and top score. (arrondi à l'entier le plus proche)
+        drawText('Score: %s' % (int(score)), font, windowSurface, 10, 0)
+        drawText('Top Score: %s' % (int(topScore)), font, windowSurface, 10, 40)
 
         # Draw the player's rectangle.
         windowSurface.blit(playerImage, playerRect)
