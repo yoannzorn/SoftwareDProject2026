@@ -70,7 +70,7 @@ while True:
     # Set up the start of the game.
     baddies = []
     score = 0
-    playerRect.topleft = (WINDOWWIDTH / 2, WINDOWHEIGHT - 50) #position du joueur au début du jeu
+    playerRect.topleft = (0, WINDOWHEIGHT / 2) #position du joueur au début du jeu
     moveLeft = moveRight = moveUp = moveDown = False
     baddieAddCounter = 0
     pygame.mixer.music.play(-1, 0.0)  #faire tourner la musique en boucle
