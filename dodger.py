@@ -140,8 +140,10 @@ missileImage = pygame.image.load('banana_bunch.png')
 missileImage = pygame.transform.scale(missileImage, (MISSILEWIDTH, MISSILEHEIGHT))
 
 # Show the "Start" screen.
-fondsecran = pygame.image.load('plage.png')                             
+fondsecran = pygame.image.load('menu_attente.png')                             
 fondsecran = pygame.transform.scale(fondsecran, (WINDOWWIDTH, WINDOWHEIGHT))
+fondsecranjeu = pygame.image.load('decor_plage_coucher.png')                             
+fondsecranjeu = pygame.transform.scale(fondsecranjeu, (WINDOWWIDTH, WINDOWHEIGHT))
 windowSurface.blit(fondsecran, (0, 0))
 drawText('Dodger', font, windowSurface, (WINDOWWIDTH / 3), (WINDOWHEIGHT / 3))
 drawText('Press a key to start.', font, windowSurface, (WINDOWWIDTH / 3) - 30, (WINDOWHEIGHT / 3) + 50)
@@ -220,7 +222,7 @@ while True:
                 missiles.remove(m)
 
         # Draw the game world on the window.
-        windowSurface.blit(fondsecran, (0, 0))
+        windowSurface.blit(fondsecranjeu, (0, 0))
 
         # Draw the score and top score. (arrondi à l'entier le plus proche)
         drawText('Score: %s' % (int(score)), font, windowSurface, 10, 0)
