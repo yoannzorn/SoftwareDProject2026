@@ -52,6 +52,11 @@ class Player:
     def mouseMove(self, event):
         self.rect.centerx = event.pos[0]
         self.rect.centery = event.pos[1]
+    def playerhitbaddie(self, baddies):
+        for b in baddies:
+            if self.rect.colliderect(b['rect']):
+                return True
+        return False
 
 def terminate():
     pygame.quit() #ferme pygame
@@ -65,13 +70,7 @@ def waitForPlayerToPressKey():
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE: # quitter le jeu avec la touche echap
                     terminate()
-                return
-
-def playerHasHitBaddie(playerRect, baddies): #la hitbox du joueur et des ennemis
-    for b in baddies:
-        if playerRect.colliderect(b['rect']): #si le joueur touche un ennemi, return True
-            return True                       #collision    
-    return False                              #pas collision   
+                return  
 
 def drawText(text, font, surface, x, y):
     textobj = font.render(text, 1, TEXTCOLOR)
@@ -184,7 +183,7 @@ while True:
         pygame.display.update()
 
         # Check if any of the baddies have hit the player.
-        if playerHasHitBaddie(player.rect, baddies):
+        if player.playerhitbaddie(baddies):
             if score > topScore:
                 topScore = score # set new top score
             break
