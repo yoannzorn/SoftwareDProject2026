@@ -49,6 +49,9 @@ class Player:
             self.moveUp = False
         if event.key == K_DOWN or event.key == K_s:
             self.moveDown = False
+    def mouseMove(self, event):
+        self.rect.centerx = event.pos[0]
+        self.rect.centery = event.pos[1]
 
 def terminate():
     pygame.quit() #ferme pygame
@@ -139,8 +142,7 @@ while True:
                     player.KEYUP(event)
 
             if event.type == MOUSEMOTION: # If the mouse moves, move the player where to the cursor.
-                player.rect.centerx = event.pos[0]
-                player.rect.centery = event.pos[1]
+                player.mouseMove(event)
         # Add new baddies at the top of the screen, if needed.
         baddieAddCounter += 1
         if baddieAddCounter == ADDNEWBADDIERATE:
