@@ -12,23 +12,23 @@ BADDIE1WIDTH = 40
 BADDIE1HEIGHT = 40
 BADDIE1MINSPEED = 3
 BADDIE1MAXSPEED = 6
-ADDNEWBADDIE1RATE = 30 #toute les demi-secondes
+ADDNEWBADDIE1RATE = 30 #baddie1 toutes les demi-secondes
 BADDIE2WIDTH = 60
 BADDIE2HEIGHT = 60
 BADDIE2SPEED = 2
-ADDNEWBADDIE2RATE = 400 #toutes les 7 secondes
+ADDNEWBADDIE2RATE = 400 #baddie2 toutes les 7 secondes
 BANANEWIDTH = 25                 
 BANANEHEIGHT = 15
 BANANESPEED = 7
-BANANERATE = 250  #toutes les 4 secondes
+BANANERATE = 250 #banane toutes les 4 secondes
 MURSPEED = 5
 MURWIDTH = 10
 MURHEIGHT = 200
-ADDNEWMURRATE = 300 #toutes les 5 secondes
+ADDNEWMURRATE = 300 #mur toutes les 5 secondes
 BONUSSPEED = 8
 BONUSWIDTH = 20
 BONUSHEIGHT = 20
-ADDNEWBONUSRATE = 1800 #toutes les 30 secondes
+ADDNEWBONUSRATE = 1800 #bonus toutes les 30 secondes
 
 class Player:
     def __init__(self):
@@ -38,7 +38,7 @@ class Player:
         self.rect.topleft = (0, WINDOWHEIGHT / 2)
         self.moveDown = self.moveUp = self.moveLeft = self.moveRight = False
         self.moveRate = 5
-    def keyboardMove(self):
+    def keyboardMove(self): #et faire en sorte que le joueur ne sorte pas de l'écran
         if self.moveLeft and self.rect.left > 0:
             self.rect.move_ip(-1 * self.moveRate, 0)
         if self.moveRight and self.rect.right < WINDOWWIDTH:
@@ -100,17 +100,17 @@ class Baddie1(Baddie):
         self.speed = random.randint(BADDIE1MINSPEED, BADDIE1MAXSPEED)
         self.shootCounter = random.randint(0, BANANERATE - 1)
     def tryToShoot(self, bananeImage):                        
-            self.shootCounter += 1
-            if self.shootCounter >= BANANERATE:
-                self.shootCounter = 0
-                return Banane(bananeImage, self.rect.left, self.rect.centery)
-            return None
+        self.shootCounter += 1
+        if self.shootCounter >= BANANERATE:
+            self.shootCounter = 0
+            return Banane(bananeImage, self.rect.left, self.rect.centery)
+        return None
 
 class Baddie2(Baddie):
     def __init__(self,image):
-            super().__init__(image)
-            self.rect.topleft = (WINDOWWIDTH, random.randint(0, WINDOWHEIGHT - BADDIE2HEIGHT))
-            self.speed = BADDIE2SPEED
+        super().__init__(image)
+        self.rect.topleft = (WINDOWWIDTH, random.randint(0, WINDOWHEIGHT - BADDIE2HEIGHT))
+        self.speed = BADDIE2SPEED
 
 class Banane:
     def __init__(self,image, x, y):
@@ -127,14 +127,14 @@ class Banane:
         surface.blit(self.image, self.rect)
 class Mur:
     def __init__(self,image):
-            self.image = image
-            self.rect = self.image.get_rect()
-            self.rect.topleft = (WINDOWWIDTH, random.randint(0, WINDOWHEIGHT - MURHEIGHT))
-            self.speed = MURSPEED
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (WINDOWWIDTH, random.randint(0, WINDOWHEIGHT - MURHEIGHT))
+        self.speed = MURSPEED
     def move(self):
-            self.rect.move_ip(-self.speed, 0)
+        self.rect.move_ip(-self.speed, 0)
     def isOffScreen(self):
-            return self.rect.right < 0
+        return self.rect.right < 0
     def draw(self, surface):
         surface.blit(self.image, self.rect)
 
@@ -145,11 +145,11 @@ class Bonus:
         self.rect.topleft = (WINDOWWIDTH, random.randint(0, WINDOWHEIGHT - BONUSHEIGHT))
         self.speed = BONUSSPEED
     def move(self):
-                self.rect.move_ip(-self.speed, 0)
+        self.rect.move_ip(-self.speed, 0)
     def isOffScreen(self):
-                return self.rect.right < 0
+        return self.rect.right < 0
     def draw(self, surface):
-            surface.blit(self.image, self.rect)
+        surface.blit(self.image, self.rect)
     
 
 def terminate():
@@ -159,10 +159,10 @@ def terminate():
 def waitForPlayerToPressKey():
     while True:
         for event in pygame.event.get():
-            if event.type == QUIT:       #quitter le jeu avec la croix
+            if event.type == QUIT:        #quitter le jeu avec la croix
                 terminate()
             if event.type == KEYDOWN:
-                if event.key == K_ESCAPE: # quitter le jeu avec la touche echap
+                if event.key == K_ESCAPE: #quitter le jeu avec la touche echap
                     terminate()
                 return  
 
@@ -176,11 +176,11 @@ def drawText(text, font, surface, x, y):
 pygame.init()
 mainClock = pygame.time.Clock()
 windowSurface = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT)) #taille de la fenêtre du jeu
-pygame.display.set_caption('Dodger')  #titre du jeu
+pygame.display.set_caption('Dodger') #titre du jeu
 pygame.mouse.set_visible(False)
 
 # Set up the fonts.
-font = pygame.font.SysFont(None, 48)  #police d'écriture et taille de la police
+font = pygame.font.SysFont(None, 48) #police d'écriture et taille de la police
 
 # Set up sounds.
 gameOverSound = pygame.mixer.Sound('son_perdu.wav') 
@@ -223,10 +223,10 @@ while True:
     baddie2AddCounter = 0
     murAddCounter = 0
     bonusAddCounter = 0
-    pygame.mixer.music.play(-1, 0.0)  #faire tourner la musique en boucle
+    pygame.mixer.music.play(-1, 0.0) #faire tourner la musique en boucle
 
-    while True: # The game loop runs while the game part is playing.
-        score += (1/60) # Increase score / 1 point par seconde
+    while True: #The game loop runs while the game part is playing.
+        score += (1/60) #Increase score / 1 point par seconde
 
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -242,7 +242,7 @@ while True:
                 if event.key == K_DOWN or event.key == K_s:
                     player.KEYDOWN(event)
 
-            if event.type == KEYUP: #dès qiue la touche est relachée, le joueur ne bouge plus
+            if event.type == KEYUP: #dès que la touche est relachée, le joueur ne bouge plus
                 if event.key == K_ESCAPE:
                         terminate()
                 if event.key == K_LEFT or event.key == K_a:
@@ -256,57 +256,65 @@ while True:
 
             if event.type == MOUSEMOTION: # If the mouse moves, move the player where to the cursor.
                 player.mouseMove(event)
-        # Add new baddies at the top of the screen, if needed.
+        # Add new baddies1 at the right of the screen, if needed.
         baddie1AddCounter += 1
         if baddie1AddCounter == ADDNEWBADDIE1RATE:
             baddie1AddCounter = 0
             baddies1.append(Baddie1(baddie1Image))
 
-        # Add new baddies at the top of the screen, if needed.
+        # Add new baddies2 at the right of the screen, if needed.
         baddie2AddCounter += 1
         if baddie2AddCounter == ADDNEWBADDIE2RATE:
             baddie2AddCounter = 0
             baddies2.append(Baddie2(baddie2Image))
 
-        # Add new murs at the top of the screen, if needed.
+        # Add new murs at the right of the screen, if needed.
         murAddCounter += 1
         if murAddCounter == ADDNEWMURRATE:
             murAddCounter = 0
             murs.append(Mur(murImage))
 
-        # Add new bonuses at the top of the screen, if needed.
+        # Add new bonuses at the right of the screen, if needed.
         bonusAddCounter += 1
         if bonusAddCounter == ADDNEWBONUSRATE:
             bonusAddCounter = 0
             bonuses.append(Bonus(bonusImage))
 
-        # Move the player around. et faire en sorte que le joueur ne sorte pas de l'écran
+        # Draw the game world on the window.
+        windowSurface.blit(fondsecranjeu, (0, 0))
+
+        # Move the player around. 
         player.keyboardMove()
 
-        # Move the baddies down.
-        for b in baddies1:      #vitesse des ennemis
-            b.move() #vitesse des ennemis
+        # Move the baddies1 to the left.
+        for b in baddies1:      
+            b.move() 
             banane = b.tryToShoot(bananeImage)    
             if banane is not None:                
                 bananas.append(banane)
+            b.draw(windowSurface)
 
-        # Move the baddies down.
-        for b in baddies2:      #vitesse des bananas
-            b.move() #vitesse des bananas
+        # Move the baddies2 to the left.
+        for b in baddies2:      
+            b.move()
+            b.draw(windowSurface) 
 
-        # Move the bananas down.
-        for m in bananas:      #vitesse des bananas
-            m.move() #vitesse des bananas
+        # Move the bananas to the left.
+        for m in bananas:     
+            m.move()
+            m.draw(windowSurface) 
 
-        # Move the murs down.
-        for o in murs:      #vitesse des murs
-             o.move() #vitesse des murs
+        # Move the murs to the left.
+        for o in murs:      
+             o.move()
+             o.draw(windowSurface) 
         
-        # Move the bonuses down.
-        for p in bonuses:      #vitesse des bonuses
-             p.move() #vitesse des bonuses
+        # Move the bonuses to the left.
+        for p in bonuses:      
+             p.move()
+             p.draw(windowSurface) 
 
-        # Delete baddies that have fallen past the bottom.
+        # Delete baddies that have passed the bottom left side of the screen.
         for b in baddies1[:]:
             if b.isOffScreen():
                 baddies1.remove(b)
@@ -315,17 +323,17 @@ while True:
             if b.isOffScreen():
                 baddies2.remove(b)
 
-        # Delete bananas that have fallen past the bottom.
+        # Delete bananas that have passed the bottom left side of the screen.
         for m in bananas[:]:
             if m.isOffScreen():
                 bananas.remove(m)
 
-        # Delete murs that have fallen past the bottom.
+        # Delete murs that have passed the bottom left side of the screen.
         for o in murs[:]:
             if o.isOffScreen():
                 murs.remove(o)
 
-        # Delete bonuses that have fallen past the bottom.
+        # Delete bonuses that have passed the bottom left side of the screen and change the score if the player hit a bonus.
         for p in bonuses[:]:
             if p.isOffScreen():
                 bonuses.remove(p)
@@ -333,34 +341,12 @@ while True:
                 score += 10
                 bonuses.remove(p)
 
-        # Draw the game world on the window.
-        windowSurface.blit(fondsecranjeu, (0, 0))
-
         # Draw the score and top score. (arrondi à l'entier le plus proche)
         drawText('Score: %s' % (int(score)), font, windowSurface, 10, 0)
         drawText('Top Score: %s' % (int(topScore)), font, windowSurface, 10, 40)
 
         # Draw the player's rectangle.
         player.draw(windowSurface)
-
-        # Draw each baddie.
-        for b in baddies1:
-            b.draw(windowSurface)
-        
-        for b in baddies2:
-            b.draw(windowSurface)
-
-        # Draw each banane.
-        for m in bananas:
-            m.draw(windowSurface)
-
-        # Draw each mur.
-        for o in murs:
-            o.draw(windowSurface)
-        
-        # Draw each bonus.
-        for p in bonuses:
-            p.draw(windowSurface)
 
         pygame.display.update()
 
