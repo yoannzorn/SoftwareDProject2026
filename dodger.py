@@ -290,7 +290,7 @@ while True:
         pygame.display.update()
 
         # Check if any of the baddies have hit the player.
-        if player.isHit(baddies) or player.isHit(missiles):
+        if player.isHit(baddies) or player.isHit(missiles) or player.isHit(murs):
             if score > topScore:
                 topScore = score # set new top score
             break
