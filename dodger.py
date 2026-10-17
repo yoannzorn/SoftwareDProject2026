@@ -17,6 +17,10 @@ MISSILEWIDTH = 25
 MISSILEHEIGHT = 15
 MISSILESPEED = 7
 MISSILERATE = 250
+MURSPEED = 5
+MURWIDTH = 10
+MURHEIGHT = 200
+ADDNEWMURRATE = 300
 
 class Player:
     def __init__(self):
@@ -107,6 +111,18 @@ class Missile:
         return self.rect.right < 0
     def draw(self, surface):
         surface.blit(self.image, self.rect)
+class Mur:
+    def __init__(self,image):
+            self.image = image
+            self.rect = self.image.get_rect()
+            self.rect.topleft = (WINDOWWIDTH, random.randint(0, WINDOWHEIGHT - MURHEIGHT))
+            self.speed = MURSPEED
+    def move(self):
+            self.rect.move_ip(-self.speed, 0)
+    def isOffScreen(self):
+            return self.rect.right < 0
+    def draw(self, surface):
+        surface.blit(self.image, self.rect)
 
 def terminate():
     pygame.quit() #ferme pygame
@@ -147,6 +163,8 @@ baddieImage = pygame.image.load('monkey.png')
 baddieImage = pygame.transform.scale(baddieImage, (BADDIEWIDTH, BADDIEHEIGHT))
 missileImage = pygame.image.load('banana_bunch.png')                             
 missileImage = pygame.transform.scale(missileImage, (MISSILEWIDTH, MISSILEHEIGHT))
+murImage = pygame.image.load('mur_pierre.png')                             
+murImage = pygame.transform.scale(murImage, (MURWIDTH, MURHEIGHT))
 
 # Show the "Start" screen.
 fondsecran = pygame.image.load('menu_attente.png')                             
@@ -164,9 +182,11 @@ while True:
     # Set up the start of the game.
     baddies = []
     missiles = []
+    murs = []
     score = 0
     player = Player()
     baddieAddCounter = 0
+    murAddCounter = 0
     pygame.mixer.music.play(-1, 0.0)  #faire tourner la musique en boucle
 
     while True: # The game loop runs while the game part is playing.
@@ -206,6 +226,12 @@ while True:
             baddieAddCounter = 0
             baddies.append(Baddie1(baddieImage))
 
+        # Add new murs at the top of the screen, if needed.
+        murAddCounter += 1
+        if murAddCounter == ADDNEWMURRATE:
+            murAddCounter = 0
+            murs.append(Mur(murImage))
+
         # Move the player around. et faire en sorte que le joueur ne sorte pas de l'écran
         player.keyboardMove()
 
@@ -220,6 +246,10 @@ while True:
         for m in missiles:      #vitesse des missiles
             m.move() #vitesse des missiles
 
+        # Move the murs down.
+        for o in murs:      #vitesse des murs
+             o.move() #vitesse des murs
+
         # Delete baddies that have fallen past the bottom.
         for b in baddies[:]:
             if b.isOffScreen():
@@ -229,6 +259,11 @@ while True:
         for m in missiles[:]:
             if m.isOffScreen():
                 missiles.remove(m)
+
+        # Delete murs that have fallen past the bottom.
+        for o in murs[:]:
+            if o.isOffScreen():
+                murs.remove(o)
 
         # Draw the game world on the window.
         windowSurface.blit(fondsecranjeu, (0, 0))
@@ -247,6 +282,10 @@ while True:
         # Draw each missile.
         for m in missiles:
             m.draw(windowSurface)
+
+        # Draw each mur.
+        for o in murs:
+            o.draw(windowSurface)
 
         pygame.display.update()
 
