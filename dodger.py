@@ -72,21 +72,27 @@ class Baddie:
     def __init__(self,image):
         self.image = image
         self.rect = self.image.get_rect()
-        self.rect.topleft = (WINDOWWIDTH, random.randint(0, WINDOWHEIGHT - BADDIEHEIGHT))
-        self.speed = random.randint(BADDIEMINSPEED, BADDIEMAXSPEED)
-        self.shootCounter = random.randint(0, MISSILERATE - 1)
     def move(self):
         self.rect.move_ip(-self.speed, 0)
-    def tryToShoot(self, missileImage):                        
-        self.shootCounter += 1
-        if self.shootCounter >= MISSILERATE:
-            self.shootCounter = 0
-            return Missile(missileImage, self.rect.left, self.rect.centery)
+    def tryToShoot(self, missileImage):  
         return None
     def isOffScreen(self):
         return self.rect.right < 0
     def draw(self, surface):
         surface.blit(self.image, self.rect)
+
+class Baddie1(Baddie):
+    def __init__(self,image):
+        super().__init__(image)
+        self.rect.topleft = (WINDOWWIDTH, random.randint(0, WINDOWHEIGHT - BADDIEHEIGHT))
+        self.speed = random.randint(BADDIEMINSPEED, BADDIEMAXSPEED)
+        self.shootCounter = random.randint(0, MISSILERATE - 1)
+    def tryToShoot(self, missileImage):                        
+            self.shootCounter += 1
+            if self.shootCounter >= MISSILERATE:
+                self.shootCounter = 0
+                return Missile(missileImage, self.rect.left, self.rect.centery)
+            return None
 
 class Missile:
     def __init__(self,image, x, y):
@@ -198,7 +204,7 @@ while True:
         baddieAddCounter += 1
         if baddieAddCounter == ADDNEWBADDIERATE:
             baddieAddCounter = 0
-            baddies.append(Baddie(baddieImage))
+            baddies.append(Baddie1(baddieImage))
 
         # Move the player around. et faire en sorte que le joueur ne sorte pas de l'écran
         player.keyboardMove()
