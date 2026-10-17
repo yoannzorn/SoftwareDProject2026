@@ -17,10 +17,10 @@ BADDIE2WIDTH = 60
 BADDIE2HEIGHT = 60
 BADDIE2SPEED = 2
 ADDNEWBADDIE2RATE = 400
-MISSILEWIDTH = 25                 
-MISSILEHEIGHT = 15
-MISSILESPEED = 7
-MISSILERATE = 250
+BANANEWIDTH = 25                 
+BANANEHEIGHT = 15
+BANANESPEED = 7
+BANANERATE = 250
 MURSPEED = 5
 MURWIDTH = 10
 MURHEIGHT = 200
@@ -94,12 +94,12 @@ class Baddie1(Baddie):
         super().__init__(image)
         self.rect.topleft = (WINDOWWIDTH, random.randint(0, WINDOWHEIGHT - BADDIE1HEIGHT))
         self.speed = random.randint(BADDIE1MINSPEED, BADDIE1MAXSPEED)
-        self.shootCounter = random.randint(0, MISSILERATE - 1)
-    def tryToShoot(self, missileImage):                        
+        self.shootCounter = random.randint(0, BANANERATE - 1)
+    def tryToShoot(self, bananeImage):                        
             self.shootCounter += 1
-            if self.shootCounter >= MISSILERATE:
+            if self.shootCounter >= BANANERATE:
                 self.shootCounter = 0
-                return Missile(missileImage, self.rect.left, self.rect.centery)
+                return Banane(bananeImage, self.rect.left, self.rect.centery)
             return None
 
 class Baddie2(Baddie):
@@ -108,13 +108,13 @@ class Baddie2(Baddie):
             self.rect.topleft = (WINDOWWIDTH, random.randint(0, WINDOWHEIGHT - BADDIE2HEIGHT))
             self.speed = BADDIE2SPEED
 
-class Missile:
+class Banane:
     def __init__(self,image, x, y):
         self.image = image
         self.rect = self.image.get_rect()
         self.rect.right = x
         self.rect.centery = y
-        self.speed = MISSILESPEED
+        self.speed = BANANESPEED
     def move(self):
         self.rect.move_ip(-self.speed, 0)
     def isOffScreen(self):
@@ -173,8 +173,8 @@ baddie1Image = pygame.image.load('monkey.png')
 baddie1Image = pygame.transform.scale(baddie1Image, (BADDIE1WIDTH, BADDIE1HEIGHT))
 baddie2Image = pygame.image.load('gorille_512.png')                             
 baddie2Image = pygame.transform.scale(baddie2Image, (BADDIE2WIDTH, BADDIE2HEIGHT))
-missileImage = pygame.image.load('banana_bunch.png')                             
-missileImage = pygame.transform.scale(missileImage, (MISSILEWIDTH, MISSILEHEIGHT))
+bananeImage = pygame.image.load('banana_bunch.png')                             
+bananeImage = pygame.transform.scale(bananeImage, (BANANEWIDTH, BANANEHEIGHT))
 murImage = pygame.image.load('mur_pierre.png')                             
 murImage = pygame.transform.scale(murImage, (MURWIDTH, MURHEIGHT))
 
@@ -194,7 +194,7 @@ while True:
     # Set up the start of the game.
     baddies1 = []
     baddies2 = []
-    missiles = []
+    bananas = []
     murs = []
     score = 0
     player = Player()
@@ -258,17 +258,17 @@ while True:
         # Move the baddies down.
         for b in baddies1:      #vitesse des ennemis
             b.move() #vitesse des ennemis
-            missile = b.tryToShoot(missileImage)    
-            if missile is not None:                
-                missiles.append(missile)
+            banane = b.tryToShoot(bananeImage)    
+            if banane is not None:                
+                bananas.append(banane)
 
         # Move the baddies down.
-        for b in baddies2:      #vitesse des missiles
-            b.move() #vitesse des missiles
+        for b in baddies2:      #vitesse des bananas
+            b.move() #vitesse des bananas
 
-        # Move the missiles down.
-        for m in missiles:      #vitesse des missiles
-            m.move() #vitesse des missiles
+        # Move the bananas down.
+        for m in bananas:      #vitesse des bananas
+            m.move() #vitesse des bananas
 
         # Move the murs down.
         for o in murs:      #vitesse des murs
@@ -283,10 +283,10 @@ while True:
             if b.isOffScreen():
                 baddies2.remove(b)
 
-        # Delete missiles that have fallen past the bottom.
-        for m in missiles[:]:
+        # Delete bananas that have fallen past the bottom.
+        for m in bananas[:]:
             if m.isOffScreen():
-                missiles.remove(m)
+                bananas.remove(m)
 
         # Delete murs that have fallen past the bottom.
         for o in murs[:]:
@@ -310,8 +310,8 @@ while True:
         for b in baddies2:
             b.draw(windowSurface)
 
-        # Draw each missile.
-        for m in missiles:
+        # Draw each banane.
+        for m in bananas:
             m.draw(windowSurface)
 
         # Draw each mur.
@@ -321,7 +321,7 @@ while True:
         pygame.display.update()
 
         # Check if any of the baddies have hit the player.
-        if player.isHit(baddies1) or player.isHit(baddies2) or player.isHit(missiles) or player.isHit(murs):
+        if player.isHit(baddies1) or player.isHit(baddies2) or player.isHit(bananas) or player.isHit(murs):
             if score > topScore:
                 topScore = score # set new top score
             break
