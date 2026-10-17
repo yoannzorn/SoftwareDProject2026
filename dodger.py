@@ -77,6 +77,11 @@ class Player:
             if self.rect.colliderect(o.rect):          
                 return True
         return False
+    def isHitByBonus(self, bonuses):
+        for b in bonuses:
+            if self.rect.colliderect(b.rect):
+                return True
+        return False
     def draw(self, surface):
         surface.blit(self.image, self.rect)
 
@@ -366,6 +371,10 @@ while True:
             if score > topScore:
                 topScore = score # set new top score
             break
+
+        # Check if any of the baddies have hit the player.
+        if player.isHitByBonus(bonuses):
+            score += (10/60) 
 
         mainClock.tick(FPS)
 
