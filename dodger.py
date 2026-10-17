@@ -218,6 +218,7 @@ while True:
     murs = []
     bonuses = []
     score = 0
+    bonus = 0
     player = Player()
     baddie1AddCounter = 0
     baddie2AddCounter = 0
@@ -339,11 +340,13 @@ while True:
                 bonuses.remove(p)
             if player.rect.colliderect(p.rect):
                 score += 10
+                bonus += 1
                 bonuses.remove(p)
 
         # Draw the score and top score. (arrondi à l'entier le plus proche)
         drawText('Score: %s' % (int(score)), font, windowSurface, 10, 0)
         drawText('Top Score: %s' % (int(topScore)), font, windowSurface, 10, 40)
+        drawText('Bonuses: %s' % (int(bonus)), font, windowSurface, 10, 80)
 
         # Draw the player's rectangle.
         player.draw(windowSurface)
