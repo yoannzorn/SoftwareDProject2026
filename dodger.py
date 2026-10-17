@@ -8,11 +8,15 @@ BACKGROUNDCOLOR = (255, 255, 255)
 FPS = 60
 PLAYERWIDTH = 40
 PLAYERHEIGHT = 40
-BADDIEWIDTH = 40
-BADDIEHEIGHT = 40
-BADDIEMINSPEED = 3
-BADDIEMAXSPEED = 6
-ADDNEWBADDIERATE = 30
+BADDIE1WIDTH = 40
+BADDIE1HEIGHT = 40
+BADDIE1MINSPEED = 3
+BADDIE1MAXSPEED = 6
+ADDNEWBADDIE1RATE = 30
+BADDIE2WIDTH = 60
+BADDIE2HEIGHT = 60
+BADDIE2SPEED = 2
+ADDNEWBADDIE2RATE = 400
 MISSILEWIDTH = 25                 
 MISSILEHEIGHT = 15
 MISSILESPEED = 7
@@ -88,8 +92,8 @@ class Baddie:
 class Baddie1(Baddie):
     def __init__(self,image):
         super().__init__(image)
-        self.rect.topleft = (WINDOWWIDTH, random.randint(0, WINDOWHEIGHT - BADDIEHEIGHT))
-        self.speed = random.randint(BADDIEMINSPEED, BADDIEMAXSPEED)
+        self.rect.topleft = (WINDOWWIDTH, random.randint(0, WINDOWHEIGHT - BADDIE1HEIGHT))
+        self.speed = random.randint(BADDIE1MINSPEED, BADDIE1MAXSPEED)
         self.shootCounter = random.randint(0, MISSILERATE - 1)
     def tryToShoot(self, missileImage):                        
             self.shootCounter += 1
@@ -97,6 +101,12 @@ class Baddie1(Baddie):
                 self.shootCounter = 0
                 return Missile(missileImage, self.rect.left, self.rect.centery)
             return None
+
+class Baddie2(Baddie):
+    def __init__(self,image):
+            super().__init__(image)
+            self.rect.topleft = (WINDOWWIDTH, random.randint(0, WINDOWHEIGHT - BADDIE2HEIGHT))
+            self.speed = BADDIE2SPEED
 
 class Missile:
     def __init__(self,image, x, y):
@@ -159,8 +169,10 @@ gameOverSound = pygame.mixer.Sound('son_perdu.wav')
 pygame.mixer.music.load('musique_plage.mid')
 
 # Set up images.                                                          
-baddieImage = pygame.image.load('monkey.png')                             
-baddieImage = pygame.transform.scale(baddieImage, (BADDIEWIDTH, BADDIEHEIGHT))
+baddie1Image = pygame.image.load('monkey.png')                             
+baddie1Image = pygame.transform.scale(baddie1Image, (BADDIE1WIDTH, BADDIE1HEIGHT))
+baddie2Image = pygame.image.load('gorille_512.png')                             
+baddie2Image = pygame.transform.scale(baddie2Image, (BADDIE2WIDTH, BADDIE2HEIGHT))
 missileImage = pygame.image.load('banana_bunch.png')                             
 missileImage = pygame.transform.scale(missileImage, (MISSILEWIDTH, MISSILEHEIGHT))
 murImage = pygame.image.load('mur_pierre.png')                             
@@ -180,12 +192,14 @@ waitForPlayerToPressKey()
 topScore = 0
 while True:
     # Set up the start of the game.
-    baddies = []
+    baddies1 = []
+    baddies2 = []
     missiles = []
     murs = []
     score = 0
     player = Player()
-    baddieAddCounter = 0
+    baddie1AddCounter = 0
+    baddie2AddCounter = 0
     murAddCounter = 0
     pygame.mixer.music.play(-1, 0.0)  #faire tourner la musique en boucle
 
@@ -221,10 +235,16 @@ while True:
             if event.type == MOUSEMOTION: # If the mouse moves, move the player where to the cursor.
                 player.mouseMove(event)
         # Add new baddies at the top of the screen, if needed.
-        baddieAddCounter += 1
-        if baddieAddCounter == ADDNEWBADDIERATE:
-            baddieAddCounter = 0
-            baddies.append(Baddie1(baddieImage))
+        baddie1AddCounter += 1
+        if baddie1AddCounter == ADDNEWBADDIE1RATE:
+            baddie1AddCounter = 0
+            baddies1.append(Baddie1(baddie1Image))
+
+        # Add new baddies at the top of the screen, if needed.
+        baddie2AddCounter += 1
+        if baddie2AddCounter == ADDNEWBADDIE2RATE:
+            baddie2AddCounter = 0
+            baddies2.append(Baddie2(baddie2Image))
 
         # Add new murs at the top of the screen, if needed.
         murAddCounter += 1
@@ -236,11 +256,15 @@ while True:
         player.keyboardMove()
 
         # Move the baddies down.
-        for b in baddies:      #vitesse des ennemis
+        for b in baddies1:      #vitesse des ennemis
             b.move() #vitesse des ennemis
             missile = b.tryToShoot(missileImage)    
             if missile is not None:                
                 missiles.append(missile)
+
+        # Move the baddies down.
+        for b in baddies2:      #vitesse des missiles
+            b.move() #vitesse des missiles
 
         # Move the missiles down.
         for m in missiles:      #vitesse des missiles
@@ -251,9 +275,13 @@ while True:
              o.move() #vitesse des murs
 
         # Delete baddies that have fallen past the bottom.
-        for b in baddies[:]:
+        for b in baddies1[:]:
             if b.isOffScreen():
-                baddies.remove(b)
+                baddies1.remove(b)
+                
+        for b in baddies2[:]:
+            if b.isOffScreen():
+                baddies2.remove(b)
 
         # Delete missiles that have fallen past the bottom.
         for m in missiles[:]:
@@ -276,7 +304,10 @@ while True:
         player.draw(windowSurface)
 
         # Draw each baddie.
-        for b in baddies:
+        for b in baddies1:
+            b.draw(windowSurface)
+        
+        for b in baddies2:
             b.draw(windowSurface)
 
         # Draw each missile.
@@ -290,7 +321,7 @@ while True:
         pygame.display.update()
 
         # Check if any of the baddies have hit the player.
-        if player.isHit(baddies) or player.isHit(missiles) or player.isHit(murs):
+        if player.isHit(baddies1) or player.isHit(baddies2) or player.isHit(missiles) or player.isHit(murs):
             if score > topScore:
                 topScore = score # set new top score
             break
